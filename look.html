@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A HomeGlow look</title>
+<meta name="description" content="Someone shared a HomeGlow lighting look with you.">
+<link rel="stylesheet" href="style.css">
+<style>
+  .share { max-width: 520px; margin: 0 auto; padding: 48px 16px; text-align: center; }
+  .share h1 { font-size: 2rem; margin: 8px 0 18px; }
+  .lights { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin: 18px 0 28px; }
+  .lights span { width: 16px; height: 16px; border-radius: 50%; box-shadow: 0 0 12px currentColor; }
+  .buttons { display: flex; flex-direction: column; gap: 12px; align-items: center; }
+  .buttons a { display: inline-block; min-width: 260px; padding: 14px 22px; border-radius: 999px;
+               font-weight: 700; text-decoration: none; }
+  .open { background: linear-gradient(90deg, #7f5cff, #ff5ca8); color: #fff; }
+  .store { border: 1px solid rgba(255,255,255,.35); color: inherit; }
+  .small { opacity: .7; font-size: .9rem; margin-top: 22px; }
+</style>
+</head>
+<body>
+<main class="share">
+  <p class="small">Someone shared a look with you</p>
+  <h1 id="name">A HomeGlow look</h1>
+  <div class="lights" id="lights"></div>
+  <div class="buttons">
+    <a class="open" id="open" href="#">Open in HomeGlow</a>
+    <a class="store" href="https://apps.apple.com/app/id6821318234">Get HomeGlow on the App Store</a>
+  </div>
+  <p class="small">HomeGlow plays looks on WLED lights. Open this page on the iPhone that runs HomeGlow.</p>
+</main>
+<script>
+  // The look rides in the part of the link after "#", so it never reaches any server.
+  const colors = {
+    "Red": "#ff2a2a", "Orange": "#ff6a00", "Amber": "#ff9f1a", "Yellow": "#ffd400", "Gold": "#e6b422",
+    "Slime Green": "#4dff1a", "Lime": "#9dff00", "Green": "#18d14b", "Kelly Green": "#12a150", "Teal": "#00c2a0",
+    "Cyan": "#00e5ff", "Sky Blue": "#3fa9ff", "Blue": "#2950ff", "Royal Blue": "#3b5cff", "Navy": "#1a2a8e",
+    "Deep Purple": "#6a12c9", "Purple": "#8a2be2", "Magenta": "#ff2bd6", "Pink": "#ff4f9a", "Light Pink": "#ffb3d1",
+    "Maroon": "#8a1530", "Silver": "#b8bcc6", "White LED": "#e8f3ff", "Warm White": "#ffcf8a", "Bright White": "#ffffff"
+  };
+  const data = location.hash.slice(1);
+  if (data) {
+    document.getElementById("open").href = "homeglow://look?d=" + data;
+    try {
+      let b = data.replace(/-/g, "+").replace(/_/g, "/");
+      while (b.length % 4) b += "=";
+      const look = JSON.parse(decodeURIComponent(escape(atob(b))));
+      if (look.n) { document.getElementById("name").textContent = look.n; document.title = look.n + " · HomeGlow"; }
+      const s = look.s || {};
+      const list = [s.c1, s.c2, s.c3].filter(c => c && colors[c]);
+      const row = document.getElementById("lights");
+      for (let i = 0; i < 12 && list.length; i++) {
+        const dot = document.createElement("span");
+        dot.style.background = dot.style.color = colors[list[i % list.length]];
+        row.appendChild(dot);
+      }
+    } catch (e) { /* show the page without the preview */ }
+    // Try the app right away; if it isn't installed, the page stays.
+    setTimeout(() => { location.href = "homeglow://look?d=" + data; }, 300);
+  }
+</script>
+</body>
+</html>
