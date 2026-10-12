@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Control your lights while away · HomeGlow</title>
+<meta name="description" content="A free, secure way to use HomeGlow away from home with Tailscale.">
+<link rel="stylesheet" href="style.css">
+<style>
+  .guide { max-width: 720px; margin: 0 auto; padding: 40px 16px 64px; line-height: 1.55; }
+  .guide h1 { margin-bottom: 6px; }
+  .guide h2 { margin-top: 34px; }
+  .guide ol li, .guide ul li { margin: 6px 0; }
+  .note { padding: 12px 16px; border-radius: 12px; background: rgba(127, 92, 255, .15); }
+  code { padding: 1px 6px; border-radius: 6px; background: rgba(255,255,255,.1); }
+</style>
+</head>
+<body>
+<main class="guide">
+  <p><a href="index.html">← HomeGlow</a></p>
+  <h1>Control your lights while you're away</h1>
+  <p>HomeGlow talks to your lights over your home Wi-Fi. To reach them from anywhere, use <strong>Tailscale</strong>, a free, secure app. One device at home stays on as the "doorway," and your iPhone goes through it. HomeGlow then works away from home just like it does at home.</p>
+  <p class="note">Free for up to 6 people. About 15–20 minutes. Your schedules, Holiday Autopilot and Game Day already run with your phone off, so you only need this to change things while you're out.</p>
+
+  <h2>Before you start: your home network range</h2>
+  <p>In HomeGlow, open Help → <em>Control your lights when you're away</em>. It shows your range, worked out from your lights, with a Copy button. It usually looks like <code>192.168.1.0/24</code>. You'll type it in step 2.</p>
+
+  <h2>1. Make a free Tailscale account</h2>
+  <p>On your iPhone, install <strong>Tailscale</strong> from the App Store, open it, and sign in with Apple, Google or Microsoft.</p>
+
+  <h2>2. Set up the doorway at home</h2>
+  <p>Pick one device that's always on at home.</p>
+
+  <h3>Apple TV (easiest for most homes, tvOS 17 or newer)</h3>
+  <ol>
+    <li>On the Apple TV, open the App Store, search <strong>Tailscale</strong> and choose Get.</li>
+    <li>Open Tailscale, choose <strong>Install VPN Configuration</strong>, then <strong>Allow</strong>, then <strong>Connect</strong>.</li>
+    <li>Scan the code it shows with your iPhone's camera and sign in to the same account as step 1.</li>
+    <li>In Tailscale on the Apple TV, choose <strong>Subnet Router → Advertise New Route</strong> and enter your range.</li>
+    <li>Keep the Apple TV as your Home hub so it stays connected while asleep: <strong>Settings → AirPlay and HomeKit → HomeKit</strong>, and make sure it has a room.</li>
+  </ol>
+
+  <h3>Home Assistant</h3>
+  <ol>
+    <li>Go to <strong>Settings → Add-ons → Add-on Store</strong>, search <strong>Tailscale</strong> and install it.</li>
+    <li>Start it, open its Web UI, and sign in to the same account as step 1.</li>
+    <li>It shares your home network by itself. If you changed its settings, make sure "advertise routes" includes your range.</li>
+  </ol>
+
+  <h3>Synology</h3>
+  <ol>
+    <li>In DSM, open <strong>Package Center</strong>, search <strong>Tailscale</strong> and install it.</li>
+    <li>Open Tailscale from the main menu and sign in to the same account as step 1.</li>
+    <li>Turn on <strong>Subnet router</strong> ("Advertise subnet routes" in some versions) and enter your range. Tailscale's guide for Synology: <a href="https://tailscale.com/kb/1131/synology">tailscale.com/kb/1131</a>.</li>
+  </ol>
+
+  <h3>Mac or PC</h3>
+  <ol>
+    <li>Install Tailscale from <a href="https://tailscale.com/download">tailscale.com/download</a> and sign in.</li>
+    <li>Turn on subnet routing for your range using Tailscale's guide: <a href="https://tailscale.com/kb/1019/subnets">tailscale.com/kb/1019</a>.</li>
+    <li>Set the computer to never sleep, or remote control stops whenever it does.</li>
+  </ol>
+
+  <h2>3. Approve your home network</h2>
+  <p>Go to <a href="https://login.tailscale.com/admin/machines">login.tailscale.com → Machines</a>. Find your doorway (it shows a "Subnets" tag), choose <strong>⋯ → Edit route settings</strong>, check your range, and save.</p>
+
+  <h2>4. Stop it from signing out</h2>
+  <p>On the same page, choose <strong>⋯ → Disable key expiry</strong> next to your doorway. Without this, Tailscale signs the doorway out after a few months and remote control quietly stops.</p>
+
+  <h2>5. Test it</h2>
+  <p>On your iPhone, turn on Tailscale, then turn off Wi-Fi so you're on cellular. Open HomeGlow: your lights should show as online and respond.</p>
+
+  <h2>If it doesn't work</h2>
+  <ul>
+    <li><strong>Lights show offline away from home:</strong> make sure Tailscale is on in the iPhone app and that step 3 is approved.</li>
+    <li><strong>Worked, then stopped:</strong> the doorway is off, asleep or signed out. For Apple TV, make it your Home hub. Check step 4.</li>
+    <li><strong>Lights powered by a Shelly relay:</strong> that's fine. HomeGlow switches the relay through the doorway too.</li>
+  </ul>
+  <p>Still stuck? Email <a href="mailto:homeglow.app.support@gmail.com">homeglow.app.support@gmail.com</a>.</p>
+</main>
+</body>
+</html>
